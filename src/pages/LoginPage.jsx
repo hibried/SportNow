@@ -1,15 +1,49 @@
 import { useForm } from "react-hook-form";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { toast } from 'sonner';
+import { useState } from "react";
 
 function LoginPage() {
+  const [loading, setLoading] = useState(false);
+
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm();
+    formState: { errors, isValid },
+  } = useForm({ mode: "onChange" });
 
-  const onSubmit = (data) => {
-    console.log("Login Data:", data);
-    alert(`Welcome back, ${data.email}!`);
+  const navigate = useNavigate();
+
+  const onSubmit = async (data) => {
+    // console.log("Login Data:", data);
+    // alert(`Welcome back, ${data.email}!`);
+
+    setLoading(true);
+
+    const headers = {
+        headers: {
+            'Accept': 'application/json'
+        }
+    }
+
+    const loading_toast = toast.loading("Logging in...");
+
+    try {
+        const response = await axios.post('https://sport-reservation-api-bootcamp.do.dibimbing.id/api/v1/login', data, headers);
+        localStorage.setItem("accessToken", response.data.data.token);
+        setTimeout(() => {
+            navigate("/");
+            console.log(response.data.data.token)
+            toast.dismiss(loading_toast);
+            toast.success('Successfully logged in');
+            setLoading(false);
+        }, 2000);
+    } catch (error) {
+        console.error(error.response.data.message);
+        toast.dismiss(loading_toast);
+        toast.error(error.response.data.message);
+    }
   };
 
   return (
@@ -27,13 +61,19 @@ function LoginPage() {
           <form onSubmit={handleSubmit(onSubmit)} className="w-full">
             <div className="form-control mb-4">
               <label className="label">
-                <span className="label-text">Email</span>
+                <span className="label-text">Email *</span>
               </label>
               <input
                 type="email"
                 placeholder="email@example.com"
                 className={`input input-bordered ${errors.email && "input-error"}`}
-                {...register("email", { required: "Email is required" })}
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, // basic email regex
+                    message: "Please enter a valid email address"
+                  }
+                })}
               />
               {errors.email && (
                 <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
@@ -41,7 +81,7 @@ function LoginPage() {
             </div>
             <div className="form-control mb-4">
               <label className="label">
-                <span className="label-text">Password</span>
+                <span className="label-text">Password *</span>
               </label>
               <input
                 type="password"
@@ -56,7 +96,13 @@ function LoginPage() {
                 <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
               )}
             </div>
-            <button className="btn btn-success w-full">Login</button>
+            <button
+              type="submit"
+              className="btn btn-success w-full"
+              disabled={!isValid || loading}
+            >
+              {loading ? "Logging in..." : "Login"}
+            </button>
           </form>
           <p className="mt-4 text-sm">
             Don’t have an account?{" "}

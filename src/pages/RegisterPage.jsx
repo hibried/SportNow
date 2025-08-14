@@ -1,16 +1,51 @@
 import { useForm } from "react-hook-form";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { toast } from 'sonner';
+import { useState } from "react";
 
 function RegisterPage() {
+  const [loading, setLoading] = useState(false);
+
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
-  } = useForm();
+    formState: { errors, isValid },
+  } = useForm({ mode: "onChange" });
 
-  const onSubmit = (data) => {
-    console.log("Register Data:", data);
-    alert(`Welcome, ${data.fullName}!`);
+  const navigate = useNavigate();
+
+  const onSubmit = async (data) => {
+    // console.log("Register Data:", data);
+    // alert(`Welcome, ${data.fullName}!`);
+
+    setLoading(true);
+
+    data.role = "user";
+    console.log(data);
+
+    const headers = {
+        headers: {
+            'Accept': 'application/json'
+        }
+    }
+
+    const loading_toast = toast.loading("Registering...");
+
+    try {
+        const response = await axios.post('https://sport-reservation-api-bootcamp.do.dibimbing.id/api/v1/register', data, headers);
+        setTimeout(() => {
+            navigate("/login");
+            toast.dismiss(loading_toast);
+            toast.success('Successfully registered');
+            setLoading(false);
+        }, 2000);
+    } catch (error) {
+        console.error(error.response.data.message);
+        toast.dismiss(loading_toast);
+        toast.error(error.response.data.message);
+    }
   };
 
   return (
@@ -28,13 +63,13 @@ function RegisterPage() {
           <form onSubmit={handleSubmit(onSubmit)} className="w-full">
             <div className="form-control mb-4">
               <label className="label">
-                <span className="label-text">Full Name</span>
+                <span className="label-text">Full Name *</span>
               </label>
               <input
                 type="text"
                 placeholder="John Doe"
                 className={`input input-bordered ${errors.fullName && "input-error"}`}
-                {...register("fullName", { required: "Full name is required" })}
+                {...register("name", { required: "Full name is required" })}
               />
               {errors.fullName && (
                 <p className="text-red-500 text-sm mt-1">{errors.fullName.message}</p>
@@ -42,13 +77,19 @@ function RegisterPage() {
             </div>
             <div className="form-control mb-4">
               <label className="label">
-                <span className="label-text">Email</span>
+                <span className="label-text">Email *</span>
               </label>
               <input
                 type="email"
                 placeholder="email@example.com"
                 className={`input input-bordered ${errors.email && "input-error"}`}
-                {...register("email", { required: "Email is required" })}
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, // basic email regex
+                    message: "Please enter a valid email address"
+                  }
+                })}
               />
               {errors.email && (
                 <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
@@ -56,7 +97,26 @@ function RegisterPage() {
             </div>
             <div className="form-control mb-4">
               <label className="label">
-                <span className="label-text">Password</span>
+                <span className="label-text">Phone Number</span>
+              </label>
+              <input
+                type="tel"
+                placeholder="081234567890"
+                className={`input input-bordered ${errors.phone && "input-error"}`}
+                {...register("phone_number", {
+                  pattern: {
+                    value: /^[0-9]{10,15}$/,
+                    message: "Enter a valid phone number (10–15 digits)",
+                  },
+                })}
+              />
+              {errors.phone && (
+                <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
+              )}
+            </div>
+            <div className="form-control mb-4">
+              <label className="label">
+                <span className="label-text">Password *</span>
               </label>
               <input
                 type="password"
@@ -73,24 +133,30 @@ function RegisterPage() {
             </div>
             <div className="form-control mb-4">
               <label className="label">
-                <span className="label-text">Confirm Password</span>
+                <span className="label-text">Confirm Password *</span>
               </label>
               <input
                 type="password"
                 placeholder="••••••••"
-                className={`input input-bordered ${errors.confirmPassword && "input-error"}`}
-                {...register("confirmPassword", {
+                className={`input input-bordered ${errors.c_password && "input-error"}`}
+                {...register("c_password", {
                   validate: (value) =>
                     value === watch("password") || "Passwords do not match",
                 })}
               />
-              {errors.confirmPassword && (
+              {errors.c_password && (
                 <p className="text-red-500 text-sm mt-1">
-                  {errors.confirmPassword.message}
+                  {errors.c_password.message}
                 </p>
               )}
             </div>
-            <button className="btn btn-warning w-full">Register</button>
+            <button
+              type="submit"
+              className="btn btn-warning w-full"
+              disabled={!isValid || loading}
+            >
+              {loading ? "Registering..." : "Register"}
+            </button>
           </form>
           <p className="mt-4 text-sm">
             Already have an account?{" "}

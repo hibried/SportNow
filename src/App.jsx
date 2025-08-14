@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Toaster } from 'sonner';
 
 import { Routes, Route } from 'react-router-dom';
 
@@ -12,6 +13,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 function App() {
   return (
     <>
+      <Toaster />
       <Routes>
         <Route path='/login' element={
           <GuestRoute>
