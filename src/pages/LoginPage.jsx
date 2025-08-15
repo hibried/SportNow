@@ -33,7 +33,7 @@ function LoginPage() {
         const response = await axios.post('https://sport-reservation-api-bootcamp.do.dibimbing.id/api/v1/login', data, headers);
         localStorage.setItem("accessToken", response.data.data.token);
         setTimeout(() => {
-            navigate("/");
+            navigate("/activity");
             console.log(response.data.data.token)
             toast.dismiss(loading_toast);
             toast.success('Successfully logged in');

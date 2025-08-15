@@ -4,7 +4,7 @@ const GuestRoute = ({ children }) => {
     const token = localStorage.getItem("accessToken");
 
     if (token) {
-        return <Navigate to="/" replace />;
+        return <Navigate to="/activity" replace />;
     }
 
     return <>{children || <Outlet />}</>
