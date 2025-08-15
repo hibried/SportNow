@@ -104,18 +104,18 @@ export default function ActivityDetail({ activity, onJoin, currentUser }) {
           },
         }
       );
-      // const data = await res.json();
       if (!response.data.error) {
-        setParticipants((prev) => [
-          ...prev,
-          {
-            id: Date.now(),
-            user: {
-              name: currentUser?.name,
-              email: currentUser?.email,
-            },
-          },
-        ]);
+        // setParticipants((prev) => [
+        //   ...prev,
+        //   {
+        //     id: Date.now(),
+        //     user: {
+        //       name: currentUser?.name,
+        //       email: currentUser?.email,
+        //     },
+        //   },
+        // ]);
+        navigate(`/transaction/${response.data.result.id}/confirm`);
         document.getElementById("checkout_modal").close();
       } else {
         alert("Checkout failed: " + (response.data.message || "Unknown error"));
@@ -135,7 +135,7 @@ export default function ActivityDetail({ activity, onJoin, currentUser }) {
         className="relative h-64 bg-cover bg-center"
         style={{
           backgroundImage:
-            "url('/images/sports_bg.png')",
+            "url('/images/sports_bg_bw.png')",
           backgroundPosition:
             'center'
         }}
@@ -292,7 +292,10 @@ export default function ActivityDetail({ activity, onJoin, currentUser }) {
             }`}
             disabled={!canJoin}
             // onClick={handleJoin}
-            onClick={openCheckoutModal}
+            onClick={() => {
+              openCheckoutModal();
+              setIsJoining(true);
+            }}
           >
             {isJoining && <Loader2 className="animate-spin" size={20} />}
             {isJoined && <CheckCircle size={20} />}
@@ -335,7 +338,7 @@ export default function ActivityDetail({ activity, onJoin, currentUser }) {
 
           <div className="modal-action">
             <form method="dialog">
-              <button className="btn" disabled={isCheckoutLoading}>
+              <button onClick={() => setIsJoining(false)} className="btn" disabled={isCheckoutLoading}>
                 Cancel
               </button>
             </form>

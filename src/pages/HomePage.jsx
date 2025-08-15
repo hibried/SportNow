@@ -73,36 +73,44 @@ export default function HomePage() {
     return (
         <div className="bg-base-200 min-h-screen">
             {/* Hero Section */}
-            <div className="hero min-h-[50vh]" style={{ backgroundImage: "url('/sports-bg.jpg')" }}>
-                <div className="hero-overlay bg-opacity-50"></div>
-                <div className="hero-content text-center text-neutral-content">
-                    <div>
-                        <h1 className="mb-5 text-5xl font-bold">Find & Book Your Sport Activity</h1>
-                        <p className="mb-5 text-lg">
-                            Explore various sports categories and join activities around you.
-                        </p>
-                        <a href="#activities" className="btn btn-primary btn-lg">
-                            Explore Now
-                        </a>
+            <section id="hero">
+                <div className="hero min-h-[50vh]" style={{ backgroundImage: "url(https://images5.alphacoders.com/109/1093585.jpg)" }}>
+                    <div className="hero-overlay bg-opacity-50"></div>
+                    <div className="hero-content text-center text-neutral-content">
+                        <div>
+                            <h1 className="mb-5 text-5xl font-bold">Find & Book Your Sport Activity</h1>
+                            <p className="mb-5 text-lg">
+                                Explore various sports categories and join activities around you.
+                            </p>
+                            <a href="#explore" className="btn btn-primary btn-lg">
+                                Explore Now
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
-
+            </section>
+            <section id="explore"></section>
             {/* Categories Filter */}
             <div className="container mx-auto py-8">
                 <h2 className="text-2xl font-bold mb-4">Categories</h2>
                 <div className="flex flex-wrap gap-3">
                 <button
-                    onClick={() => setSelectedCategory("")}
+                    onClick={() => {
+                        setSelectedCategory("");
+                        setPage(1);
+                    }}
                     className={`btn btn-outline ${!selectedCategory ? "btn-primary" : ""}`}
                 >
                     All
                 </button>
                 {categories.map((cat) => (
                     <button
-                    key={cat.id}
-                    onClick={() => setSelectedCategory(cat.id)}
-                    className={`btn btn-outline ${selectedCategory === cat.id ? "btn-primary" : ""}`}
+                        key={cat.id}
+                        onClick={() => {
+                            setSelectedCategory(cat.id);
+                            setPage(1);
+                        }}
+                        className={`btn btn-outline ${selectedCategory === cat.id ? "btn-primary" : ""}`}
                     >
                         {cat.name}
                     </button>
@@ -128,7 +136,7 @@ export default function HomePage() {
                     <div key={act.id} className="card bg-base-100 shadow-xl">
                         <figure>
                         <img
-                            src={act.image_url || "/images/sports_bg.png"}
+                            src={act.image_url || "/images/sports_bg_bw.png"}
                             alt={act.title}
                             className="w-full h-48 object-cover"
                         />

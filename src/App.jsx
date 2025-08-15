@@ -7,6 +7,8 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage';
 import HomePage from './pages/HomePage';
 import DetailPage from './pages/DetailPage';
+import PaymentConfirmationPage from './pages/PaymentConfirmationPage';
+import MyTransactionPage from './pages/MyTransactionPage';
 
 import GuestRoute from './components/GuestRoute';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -34,6 +36,16 @@ function App() {
         <Route path='/activity/:id' element={
           <ProtectedRoute>
             <DetailPage />
+          </ProtectedRoute>
+        } />
+        <Route path='/transaction/:id/confirm' element={
+          <ProtectedRoute>
+            <PaymentConfirmationPage />
+          </ProtectedRoute>
+        } />
+        <Route path='/my-transaction' element={
+          <ProtectedRoute>
+            <MyTransactionPage />
           </ProtectedRoute>
         } />
       </Routes>

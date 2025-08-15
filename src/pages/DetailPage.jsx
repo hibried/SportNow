@@ -62,9 +62,9 @@ export default function DetailPage() {
 
     if (!activity) {
         return (
-        <div className="flex items-center justify-center min-h-screen">
-            <span className="loading loading-spinner loading-lg text-primary"></span>
-        </div>
+            <div className="flex items-center justify-center min-h-screen">
+                <span className="loading loading-spinner loading-lg text-primary"></span>
+            </div>
         );
     }
 
