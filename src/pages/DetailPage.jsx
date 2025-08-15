@@ -52,14 +52,21 @@ export default function DetailPage() {
     const handleJoin = async (id) => {
         // Call backend to join the activity
         try {
-            await axios.post(`/api/v1/activities/${id}/join`);
+            // await axios.post(`${BASE_URL}/api/v1/activities/${id}/join`);
+            console.log("JOIN SUKCESS");
         } catch (error) {
             console.error(error);
         }
         // Optionally refetch or let ActivityDetail update participants itself
     };
 
-    if (!activity) return <p>Loading...</p>;
+    if (!activity) {
+        return (
+        <div className="flex items-center justify-center min-h-screen">
+            <span className="loading loading-spinner loading-lg text-primary"></span>
+        </div>
+        );
+    }
 
     return (
         <ActivityDetail

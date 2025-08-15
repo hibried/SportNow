@@ -10,6 +10,9 @@ export default function HomePage() {
     const [activities, setActivities] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("");
 
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+
     const navigate = useNavigate();
 
     async function fetchCategories() {
@@ -32,10 +35,10 @@ export default function HomePage() {
         fetchCategories();
     }, []);
 
-    async function fetchActivities(category) {
-        let url = `${BASE_URL}/api/v1/sport-activities?is_paginate=true&per_page=9`;
-        if (selectedCategory) {
-            url += `&sport_category_id=${selectedCategory}`;
+    async function fetchActivities(category, pageNum) {
+        let url = `${BASE_URL}/api/v1/sport-activities?is_paginate=true&per_page=9&page=${pageNum}`;
+        if (category) {
+            url += `&sport_category_id=${category}`;
         }
 
         try {
@@ -47,6 +50,8 @@ export default function HomePage() {
             });
             console.log(response.data.result.data);
             setActivities(response.data.result.data || []);
+            setPage(response.data.result.current_page);
+            setTotalPages(response.data.result.last_page);
         } catch (error) {
             console.error(error);
         }
@@ -54,8 +59,16 @@ export default function HomePage() {
 
     // Fetch activities
     useEffect(() => {
-        fetchActivities(selectedCategory);
-    }, [selectedCategory]);
+        fetchActivities(selectedCategory, page);
+    }, [selectedCategory, page]);
+
+    const goToNextPage = () => {
+        if (page < totalPages) setPage(page + 1);
+    };
+
+    const goToPreviousPage = () => {
+        if (page > 1) setPage(page - 1);
+    };
 
     return (
         <div className="bg-base-200 min-h-screen">
@@ -99,20 +112,27 @@ export default function HomePage() {
 
             {/* Activities */}
             <div id="activities" className="container mx-auto py-8">
-                <h2 className="text-2xl font-bold mb-4">Sport Activities</h2>
+                <div className="flex justify-between mb-4">
+                    <h2 className="text-2xl font-bold">Sport Activities</h2>
+                    <div className="join">
+                        <button onClick={goToPreviousPage} disabled={page === 1} className="join-item btn btn-neutral rounded-l-lg btn-sm sm:btn-md">«</button>
+                        <button className="hidden sm:block join-item btn btn-primary">{page}</button>
+                    <button onClick={goToNextPage}  disabled={page === totalPages} className="join-item btn btn-neutral rounded-r-lg btn-sm sm:btn-md">»</button>
+                </div>
+                </div>
                 {activities.length === 0 ? (
                 <p>No activities found.</p>
                 ) : (
                 <div className="grid md:grid-cols-3 gap-6">
                     {activities.map((act) => (
                     <div key={act.id} className="card bg-base-100 shadow-xl">
-                        {/* <figure>
+                        <figure>
                         <img
-                            src={act.image_url || "/default-sport.jpg"}
+                            src={act.image_url || "/images/sports_bg.png"}
                             alt={act.title}
                             className="w-full h-48 object-cover"
                         />
-                        </figure> */}
+                        </figure>
                         <div className="card-body">
                             <h3 className="card-title">{act.title}</h3>
                             <p>{act.description}</p>
