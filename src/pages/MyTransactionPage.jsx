@@ -36,16 +36,28 @@ const MyTransactionPage = () => {
         }
     };
 
+    // for pagination
+    const [isLoading, setIsLoading] = useState(false);
+
     useEffect(() => {
-        fetchTransactions(page);
+        let isActive = true; // to cancel stale responses
+        setIsLoading(true);
+
+        fetchTransactions(page).finally(() => {
+            if (isActive) setIsLoading(false);
+        });
+
+        return () => {
+            isActive = false; // ignore outdated results
+        };
     }, [temp, page]);
 
     const goToNextPage = () => {
-        if (page < totalPages) setPage(page + 1);
+        if (!isLoading && page < totalPages) setPage(p => p + 1);
     };
 
     const goToPreviousPage = () => {
-        if (page > 1) setPage(page - 1);
+        if (!isLoading && page > 1) setPage(p => p - 1);
     };
 
     const getStatusColor = (status) => {
