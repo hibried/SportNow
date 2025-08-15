@@ -106,7 +106,7 @@ function PaymentConfirmationPage() {
                   : ""
               }`}
             >
-              {transaction.status}
+              {transaction.status.toUpperCase()}
             </span>
           </p>
           <p className="text-gray-600 dark:text-gray-300">
@@ -124,7 +124,7 @@ function PaymentConfirmationPage() {
           </h2>
           <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
             <p className="font-bold text-gray-800 dark:text-gray-100">
-              {activity?.title}
+              {activity?.title.toUpperCase()}
             </p>
             <p className="text-gray-600 dark:text-gray-300">
               {activity?.address}
@@ -162,29 +162,34 @@ function PaymentConfirmationPage() {
         </div>
 
         {/* Proof Upload */}
-        <div className="mb-6">
-          <label className="block font-semibold text-gray-800 dark:text-gray-100 mb-2">
-            Upload Proof of Payment
-          </label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="file-input file-input-bordered w-full max-w-xs"
-          />
-        </div>
+        {transaction.status !== 'cancelled' && transaction.status !== 'success' &&
+          <div className="mb-6">
+            <label className="block font-semibold text-gray-800 dark:text-gray-100 mb-2">
+              Upload Proof of Payment
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="file-input file-input-bordered w-full max-w-xs"
+            />
+          </div>
+        }
 
         {/* Buttons */}
         <div className="flex justify-end gap-3">
-          <button
-            onClick={handleSubmit}
-            disabled={isSubmitting || !proofFile}
-            className={`btn btn-success ${
-              isSubmitting || !proofFile ? "btn-disabled" : ""
-            }`}
-          >
-            {isSubmitting ? "Submitting..." : "Confirm Payment"}
-          </button>
+          <button onClick={() => navigate('/my-transaction')} className="btn btn-primary">Back to My Transactions</button>
+          {transaction.status !== 'cancelled' && transaction.status !== 'success' &&
+            <button
+              onClick={handleSubmit}
+              disabled={isSubmitting || !proofFile}
+              className={`btn btn-success ${
+                isSubmitting || !proofFile ? "btn-disabled" : ""
+              }`}
+            >
+              {isSubmitting ? "Submitting..." : "Confirm Payment"}
+            </button>
+          }
         </div>
       </div>
     </div>

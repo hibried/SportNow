@@ -125,8 +125,8 @@ export default function HomePage() {
                     <div className="join">
                         <button onClick={goToPreviousPage} disabled={page === 1} className="join-item btn btn-neutral rounded-l-lg btn-sm sm:btn-md">«</button>
                         <button className="hidden sm:block join-item btn btn-primary">{page}</button>
-                    <button onClick={goToNextPage}  disabled={page === totalPages} className="join-item btn btn-neutral rounded-r-lg btn-sm sm:btn-md">»</button>
-                </div>
+                        <button onClick={goToNextPage}  disabled={page === totalPages} className="join-item btn btn-neutral rounded-r-lg btn-sm sm:btn-md">»</button>
+                    </div>
                 </div>
                 {activities.length === 0 ? (
                 <p>No activities found.</p>
