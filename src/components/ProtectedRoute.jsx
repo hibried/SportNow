@@ -1,13 +1,22 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Outlet, Navigate } from "react-router-dom";
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = ({ Logout, children, allowedRoles }) => {
     const token = localStorage.getItem("accessToken");
-    
-    if (!token) {
-        return <Navigate to="/login" replace />;
-    }
+    const role = localStorage.getItem("role");
 
-    return <>{children || <Outlet />}</>;
+    if (!token || !role) {
+        Logout();
+    } else {
+        if(!allowedRoles.includes(role)){
+            if(role === "user"){
+                return <Navigate to="/activity" />;
+            } else {
+                return <Navigate to="/dashboard" />;
+            }
+        } else {
+            return <>{ children || <Outlet /> }</>;
+        }
+    }
 };
 
 export default ProtectedRoute;

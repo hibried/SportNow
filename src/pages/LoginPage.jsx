@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from 'sonner';
 import { useState } from "react";
 
+const BASE_URL = "https://sport-reservation-api-bootcamp.do.dibimbing.id";
+
 function LoginPage() {
   const [loading, setLoading] = useState(false);
 
@@ -21,20 +23,30 @@ function LoginPage() {
 
     setLoading(true);
 
-    const headers = {
-        headers: {
-            'Accept': 'application/json'
-        }
-    }
-
     const loading_toast = toast.loading("Logging in...");
 
     try {
-        const response = await axios.post('https://sport-reservation-api-bootcamp.do.dibimbing.id/api/v1/login', data, headers);
-        localStorage.setItem("accessToken", response.data.data.token);
+        const loginResponse = await axios.post(`${BASE_URL}/api/v1/login`, data, {
+          headers: {
+            Accept: 'application/json'
+          }
+        });
+        const token = loginResponse.data.data.token;
+
+        const roleResponse = await axios.get(`${BASE_URL}/api/v1/me`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: 'application/json',
+          },
+        });
+        const role = roleResponse.data.data.role;
+
+        localStorage.setItem("accessToken", token);
+        localStorage.setItem("role", role);
+
         setTimeout(() => {
-            navigate("/activity");
-            console.log(response.data.data.token)
+            navigate(role === "user" ? "/activity" : "/dashboard");
+            console.log(loginResponse);
             toast.dismiss(loading_toast);
             toast.success('Successfully logged in');
             setLoading(false);

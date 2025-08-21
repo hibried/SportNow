@@ -82,6 +82,14 @@ export default function HomePage() {
         if (!isLoading && page > 1) setPage(p => p - 1);
     };
 
+    // if(activities.length === 0){
+    //     return (
+    //         <div className="flex items-center justify-center min-h-screen">
+    //             <span className="loading loading-spinner loading-lg text-primary"></span>
+    //         </div>
+    //     );
+    // }
+
     return (
         <div className="bg-base-200 min-h-screen">
             {/* Hero Section */}
@@ -105,29 +113,35 @@ export default function HomePage() {
             {/* Categories Filter */}
             <div className="container mx-auto py-8">
                 <h2 className="text-2xl font-bold mb-4">Categories</h2>
-                <div className="flex flex-wrap gap-3">
-                <button
-                    onClick={() => {
-                        setSelectedCategory("");
-                        setPage(1);
-                    }}
-                    className={`btn btn-outline ${!selectedCategory ? "btn-primary" : ""}`}
-                >
-                    All
-                </button>
-                {categories.map((cat) => (
-                    <button
-                        key={cat.id}
-                        onClick={() => {
-                            setSelectedCategory(cat.id);
-                            setPage(1);
-                        }}
-                        className={`btn btn-outline ${selectedCategory === cat.id ? "btn-primary" : ""}`}
-                    >
-                        {cat.name}
-                    </button>
-                ))}
-                </div>
+                {categories.length > 0 ? 
+                    <div className="flex flex-wrap gap-3">
+                        <button
+                            onClick={() => {
+                                setSelectedCategory("");
+                                setPage(1);
+                            }}
+                            className={`btn btn-outline ${!selectedCategory ? "btn-primary" : ""}`}
+                        >
+                            All
+                        </button>
+                        {categories.map((cat) => (
+                            <button
+                                key={cat.id}
+                                onClick={() => {
+                                    setSelectedCategory(cat.id);
+                                    setPage(1);
+                                }}
+                                className={`btn btn-outline ${selectedCategory === cat.id ? "btn-primary" : ""}`}
+                            >
+                                {cat.name}
+                            </button>
+                        ))}
+                    </div>
+                    :
+                    <div className="flex items-center justify-center">
+                        <span className="loading loading-spinner loading-lg text-primary"></span>
+                    </div>
+                }
             </div>
 
             {/* Activities */}

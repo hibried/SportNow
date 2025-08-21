@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { Toaster } from 'sonner';
+import { Toaster, toast } from 'sonner';
 
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage';
@@ -9,11 +9,45 @@ import HomePage from './pages/HomePage';
 import DetailPage from './pages/DetailPage';
 import PaymentConfirmationPage from './pages/PaymentConfirmationPage';
 import MyTransactionPage from './pages/MyTransactionPage';
+import DashboardPage from './pages/admin/DashboardPage';
 
 import GuestRoute from './components/GuestRoute';
 import ProtectedRoute from './components/ProtectedRoute';
 
+import axios from 'axios';
+
+const BASE_URL = "https://sport-reservation-api-bootcamp.do.dibimbing.id";
+
 function App() {
+  const navigate = useNavigate();
+
+  async function Logout(){
+    try {
+      const token = localStorage.getItem("accessToken");
+      const response = await axios.post(`${BASE_URL}/api/v1/logout`, null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
+        },
+      });
+      console.log(response);
+      
+      if(response.status === 200){
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("role");
+        
+        const loading_toast = toast.loading("Logging out...");
+        setTimeout(() => {
+          navigate("/login");
+          toast.dismiss(loading_toast);
+          toast.success('Successfully logged out');
+        }, 2000);
+      }
+    } catch (error) {
+      console.error(error);
+    }    
+  }
+
   return (
     <>
       <Toaster />
@@ -28,25 +62,24 @@ function App() {
             <RegisterPage />
           </GuestRoute>
         } />
+
+        {/* user only */}
         <Route path='/activity' element={
-          <ProtectedRoute>
-            <HomePage />
-          </ProtectedRoute>
+          <ProtectedRoute Logout={Logout} children={<HomePage />} allowedRoles={["user"]} />
         } />
         <Route path='/activity/:id' element={
-          <ProtectedRoute>
-            <DetailPage />
-          </ProtectedRoute>
+          <ProtectedRoute Logout={Logout} children={<DetailPage />} allowedRoles={["user"]} />
         } />
         <Route path='/transaction/:id/confirm' element={
-          <ProtectedRoute>
-            <PaymentConfirmationPage />
-          </ProtectedRoute>
+          <ProtectedRoute Logout={Logout} children={<PaymentConfirmationPage />} allowedRoles={["user"]} />
         } />
         <Route path='/my-transaction' element={
-          <ProtectedRoute>
-            <MyTransactionPage />
-          </ProtectedRoute>
+          <ProtectedRoute Logout={Logout} children={<MyTransactionPage />} allowedRoles={["user"]} />
+        } />
+
+        {/* admin only */}
+        <Route path='/dashboard' element={
+          <ProtectedRoute Logout={Logout} children={<DashboardPage Logout={Logout} />} allowedRoles={["admin"]} />
         } />
       </Routes>
     </>
