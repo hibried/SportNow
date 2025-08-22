@@ -1,3 +1,4 @@
+import Navbar from "./Navbar";
 import { Navigate, Outlet } from "react-router-dom";
 
 const GuestRoute = ({ children }) => {
@@ -7,7 +8,10 @@ const GuestRoute = ({ children }) => {
         return <Navigate to="/activity" replace />;
     }
 
-    return <>{children || <Outlet />}</>
+    return <>
+        <Navbar />
+        { children || <Outlet /> }
+    </>
 };
 
 export default GuestRoute;

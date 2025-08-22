@@ -5,16 +5,21 @@ import { Routes, Route, useNavigate } from 'react-router-dom';
 
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage';
+import LandingPage from './pages/LandingPage';
+
 import HomePage from './pages/HomePage';
 import DetailPage from './pages/DetailPage';
 import PaymentConfirmationPage from './pages/PaymentConfirmationPage';
 import MyTransactionPage from './pages/MyTransactionPage';
-import DashboardPage from './pages/admin/DashboardPage';
+
+import { Dashboard } from './components/admin/Dashboard';
+import { Categories } from './components/admin/Categories';
 
 import GuestRoute from './components/GuestRoute';
 import ProtectedRoute from './components/ProtectedRoute';
 
 import axios from 'axios';
+
 
 const BASE_URL = "https://sport-reservation-api-bootcamp.do.dibimbing.id";
 
@@ -38,7 +43,7 @@ function App() {
         
         const loading_toast = toast.loading("Logging out...");
         setTimeout(() => {
-          navigate("/login");
+          navigate("/landing");
           toast.dismiss(loading_toast);
           toast.success('Successfully logged out');
         }, 2000);
@@ -62,24 +67,31 @@ function App() {
             <RegisterPage />
           </GuestRoute>
         } />
-
+        <Route path='/landing' element={
+          <GuestRoute>
+            <LandingPage />
+          </GuestRoute>
+        } />
         {/* user only */}
         <Route path='/activity' element={
-          <ProtectedRoute Logout={Logout} children={<HomePage />} allowedRoles={["user"]} />
+          <ProtectedRoute Logout={ Logout } children={ <HomePage /> } allowedRoles={ ["user"] } />
         } />
         <Route path='/activity/:id' element={
-          <ProtectedRoute Logout={Logout} children={<DetailPage />} allowedRoles={["user"]} />
+          <ProtectedRoute Logout={ Logout } children={ <DetailPage /> } allowedRoles={ ["user"] } />
         } />
         <Route path='/transaction/:id/confirm' element={
-          <ProtectedRoute Logout={Logout} children={<PaymentConfirmationPage />} allowedRoles={["user"]} />
+          <ProtectedRoute Logout={ Logout } children={ <PaymentConfirmationPage /> } allowedRoles={ ["user"] } />
         } />
         <Route path='/my-transaction' element={
-          <ProtectedRoute Logout={Logout} children={<MyTransactionPage />} allowedRoles={["user"]} />
+          <ProtectedRoute Logout={ Logout } children={ <MyTransactionPage /> } allowedRoles={ ["user"] } />
         } />
 
         {/* admin only */}
         <Route path='/dashboard' element={
-          <ProtectedRoute Logout={Logout} children={<DashboardPage Logout={Logout} />} allowedRoles={["admin"]} />
+          <ProtectedRoute Logout={ Logout } children={ Dashboard } allowedRoles={ ["admin"] } />
+        } />
+        <Route path='/categories' element={
+          <ProtectedRoute Logout={ Logout } children={ Categories } allowedRoles={ ["admin"] } />
         } />
       </Routes>
     </>

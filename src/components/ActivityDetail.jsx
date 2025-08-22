@@ -15,7 +15,7 @@ import axios from "axios";
 const BASE_URL = "https://sport-reservation-api-bootcamp.do.dibimbing.id";
 const BEARER_TOKEN = localStorage.getItem("accessToken"); // from Postman collection
 
-export default function ActivityDetail({ activity, onJoin, currentUser }) {
+export default function ActivityDetail({ activity }) {
   const [isJoining, setIsJoining] = useState(false);
   const [isJoined, setIsJoined] = useState(false);
   const [participants, setParticipants] = useState(activity.participants || []);
@@ -311,6 +311,7 @@ export default function ActivityDetail({ activity, onJoin, currentUser }) {
           </button>
         </div>
       </div>
+      
       {/* Checkout Modal */}
       <dialog id="checkout_modal" className="modal">
         <div className="modal-box">

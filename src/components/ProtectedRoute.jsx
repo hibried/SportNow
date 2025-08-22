@@ -1,4 +1,6 @@
 import { Outlet, Navigate } from "react-router-dom";
+import Navbar from "./Navbar";
+import AdminNavbar from "./admin/AdminNavbar";
 
 const ProtectedRoute = ({ Logout, children, allowedRoles }) => {
     const token = localStorage.getItem("accessToken");
@@ -14,7 +16,16 @@ const ProtectedRoute = ({ Logout, children, allowedRoles }) => {
                 return <Navigate to="/dashboard" />;
             }
         } else {
-            return <>{ children || <Outlet /> }</>;
+            if(role === "user"){
+                return <>
+                    <Navbar />
+                    { children || <Outlet /> }
+                </>;
+            } else {
+                return <>
+                     <AdminNavbar Logout={ Logout } Component={ children || <Outlet /> } />
+                </>;
+            }
         }
     }
 };

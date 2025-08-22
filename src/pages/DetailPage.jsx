@@ -9,7 +9,6 @@ const BEARER_TOKEN = localStorage.getItem("accessToken"); // from Postman collec
 export default function DetailPage() {
     const { id } = useParams();
     const [activity, setActivity] = useState(null);
-    const [currentUser, setCurrentUser] = useState(null);
 
     async function fetchActivityDetail() {
         // Fetch activity detail
@@ -28,37 +27,9 @@ export default function DetailPage() {
         }
     }
 
-    async function fetchCurrentUser() {
-        // Fetch current user
-        try {
-            const response = await axios.get(`${BASE_URL}/api/v1/me`, {
-                headers: {
-                    Authorization: `Bearer ${BEARER_TOKEN}`,
-                    Accept: "application/json",
-                },
-            });
-            console.log(response.data.data);
-            setCurrentUser(response.data.data);
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
     useEffect(() => {
         fetchActivityDetail();
-        fetchCurrentUser();
     }, []);
-
-    const handleJoin = async (id) => {
-        // Call backend to join the activity
-        try {
-            // await axios.post(`${BASE_URL}/api/v1/activities/${id}/join`);
-            console.log("JOIN SUKCESS");
-        } catch (error) {
-            console.error(error);
-        }
-        // Optionally refetch or let ActivityDetail update participants itself
-    };
 
     if (!activity) {
         return (
@@ -71,8 +42,6 @@ export default function DetailPage() {
     return (
         <ActivityDetail
             activity={activity}
-            onJoin={handleJoin}
-            currentUser={currentUser}
         />
     );
 }
