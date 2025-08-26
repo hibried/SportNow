@@ -1,8 +1,8 @@
-import { useForm } from "react-hook-form";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { toast } from 'sonner';
+import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { toast } from 'sonner';
+import axios from "axios";
 
 function RegisterPage() {
   const [loading, setLoading] = useState(false);

@@ -14,12 +14,14 @@ import MyTransactionPage from './pages/MyTransactionPage';
 
 import { Dashboard } from './components/admin/Dashboard';
 import { Categories } from './components/admin/Categories';
+import { SportActivities } from './components/admin/SportActivities';
+import { SportActivitiesForm } from './components/admin/SportActivitiesForm';
+import { Transactions } from './components/admin/Transactions';
 
 import GuestRoute from './components/GuestRoute';
 import ProtectedRoute from './components/ProtectedRoute';
 
 import axios from 'axios';
-
 
 const BASE_URL = "https://sport-reservation-api-bootcamp.do.dibimbing.id";
 
@@ -43,7 +45,7 @@ function App() {
         
         const loading_toast = toast.loading("Logging out...");
         setTimeout(() => {
-          navigate("/landing");
+          navigate("/");
           toast.dismiss(loading_toast);
           toast.success('Successfully logged out');
         }, 2000);
@@ -67,7 +69,7 @@ function App() {
             <RegisterPage />
           </GuestRoute>
         } />
-        <Route path='/landing' element={
+        <Route path='/' element={
           <GuestRoute>
             <LandingPage />
           </GuestRoute>
@@ -92,6 +94,18 @@ function App() {
         } />
         <Route path='/categories' element={
           <ProtectedRoute Logout={ Logout } children={ Categories } allowedRoles={ ["admin"] } />
+        } />
+        <Route path='/sport_activities' element={
+          <ProtectedRoute Logout={ Logout } children={ SportActivities } allowedRoles={ ["admin"] } />
+        } />
+        <Route path='/sport_activities/add' element={
+          <ProtectedRoute Logout={ Logout } children={ SportActivitiesForm } allowedRoles={ ["admin"] } />
+        } />
+        <Route path='/sport_activities/edit/:id' element={
+          <ProtectedRoute Logout={ Logout } children={ SportActivitiesForm } allowedRoles={ ["admin"] } />
+        } />
+        <Route path='/transactions' element={
+          <ProtectedRoute Logout={ Logout } children={ Transactions } allowedRoles={ ["admin"] } />
         } />
       </Routes>
     </>
