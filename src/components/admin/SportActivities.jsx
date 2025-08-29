@@ -113,56 +113,106 @@ function SportActivities() {
 
     return (
         <div className="p-3 pt-5 sm:p-8">
+            {/* Header */}
             <div className="flex justify-between items-center mb-3 sm:mb-6">
-                <h1 className="text-2xl sm:text-[32px] font-semibold">Sport Activities</h1>
+                {/* Title */}
+                <h1 className="text-2xl sm:text-[32px] font-extrabold bg-gradient-to-r from-indigo-600 to-cyan-500 text-transparent bg-clip-text dark:text-white">
+                    SPORT ACTIVITIES
+                </h1>
+
+                {/* Pagination */}
                 <div className="join">
-                    <button onClick={goToPreviousPage} disabled={page === 1} className="join-item btn btn-neutral rounded-l-lg btn-sm sm:btn-md">«</button>
-                    <button className="hidden sm:block join-item btn btn-primary">{page}</button>
-                    <button onClick={goToNextPage}  disabled={page === totalPages} className="join-item btn btn-neutral rounded-r-lg btn-sm sm:btn-md">»</button>
+                    <button
+                        onClick={goToPreviousPage}
+                        disabled={page === 1}
+                        className="join-item btn btn-outline btn-sm sm:btn-md hover:from-indigo-600 hover:to-cyan-500 bg-gradient-to-r"
+                    >
+                        «
+                    </button>
+                    <button className="hidden sm:block join-item btn btn-primary btn-sm sm:btn-md">
+                        {page}
+                    </button>
+                    <button
+                        onClick={goToNextPage}
+                        disabled={page === totalPages}
+                        className="join-item btn btn-outline btn-sm sm:btn-md hover:from-indigo-600 hover:to-cyan-500 bg-gradient-to-r"
+                    >
+                        »
+                    </button>
                 </div>
-                <button className="btn btn-primary text-[12px] sm:text-[14px] rounded-lg btn-sm sm:btn-md" onClick={() => navigate("/sport_activities/add")}>
+
+                {/* Add Button */}
+                <button
+                    className="btn btn-primary btn-sm sm:btn-md rounded-lg shadow-md hover:shadow-xl transition-all"
+                    onClick={() => navigate("/sport_activities/add")}
+                >
                     +
                 </button>
             </div>
-            <div className="overflow-x-auto rounded-box border border-base-content/5 px-1 pb-1 bg-base-300">
-                <table className="table rounded-box overflow-hidden">
-                    {/* head */}
-                    <thead>
+
+            {/* Table Container */}
+            <div
+                className="w-full rounded-tr-4xl rounded-bl-4xl shadow-xl border-4 border-transparent bg-base-100 overflow-x-auto max-h-190"
+                style={{
+                    background: "linear-gradient(90deg, #4f46e5, #06b6d4) border-box",
+                }}
+            >
+                <table className="table table-zebra w-full">
+                    {/* Table Header */}
+                    <thead className="text-white sticky top-0 z-10"
+                            style={{
+                            background: "linear-gradient(90deg, #4f46e5, #06b6d4) border-box",
+                        }}
+                    >
                         <tr>
                             <th>ID</th>
-                            <th>Category</th>
-                            <th>City</th>
-                            <th>Title</th>
-                            <th>Slots</th>
-                            <th>Price</th>
-                            <th>Address</th>
-                            <th>Activity Date</th>
-                            <th>Time</th>
-                            <th>Action</th>
+                            <th>CATEGORY</th>
+                            <th>CITY</th>
+                            <th>TITLE</th>
+                            <th>SLOTS</th>
+                            <th>PRICE</th>
+                            <th>ADDRESS</th>
+                            <th>ACTIVITY DATE</th>
+                            <th>TIME</th>
+                            <th>ACTION</th>
                         </tr>
                     </thead>
-                    <tbody className="bg-base-100">
+
+                    {/* Table Body */}
+                    <tbody className="bg-base-100 dark:bg-base-300 relative overflow-y-auto">
                         {activities.map((a, index) => (
-                            <tr key={index}>
+                            <tr
+                                key={index}
+                                className="hover:bg-base-200 transition-all duration-200"
+                            >
                                 <th>{a.id}</th>
                                 <td>{a.sport_category === null ? "-" : a.sport_category.name}</td>
-                                <td>{a.city.city_name_full}</td>
-                                <td>{a.title}</td>
+                                <td className="text-nowrap">{a.city.city_name_full}</td>
+                                <td className="font-medium text-nowrap">{a.title}</td>
                                 <td>{a.participants.length} / {a.slot}</td>
                                 <td>Rp{a.price.toLocaleString('de-DE')}</td>
                                 <td className="max-w-50 truncate">{a.address}</td>
                                 <td>{a.activity_date}</td>
-                                <td>{a.start_time} - {a.end_time}</td>
-                                <td className="flex gap-2">
-                                    <button onClick={() => navigate(`/sport_activities/edit/${a.id}`)}>
-                                        <Edit className="w-5 h-5 text-blue-500 cursor-pointer" />
+                                <td className="text-nowrap">{a.start_time.slice(0, 5)} - {a.end_time.slice(0, 5)}</td>
+                                <td className="flex gap-3">
+                                    {/* Edit */}
+                                    <button
+                                        onClick={() => navigate(`/sport_activities/edit/${a.id}`)}
+                                        className="p-2 rounded-full hover:bg-indigo-100 dark:hover:bg-indigo-900 transition cursor-pointer"
+                                    >
+                                        <Edit className="w-5 h-5 text-indigo-600" />
                                     </button>
-                                    <button onClick={() => {
-                                        openDeleteModal();
-                                        setFormTitle(`Delete Activity: ${a.title} (ID_${a.id})`);
-                                        setId(a.id);
-                                    }}>
-                                        <Trash2 className="w-5 h-5 text-red-500 cursor-pointer" />
+
+                                    {/* Delete */}
+                                    <button
+                                        onClick={() => {
+                                            openDeleteModal();
+                                            setFormTitle(`Delete Activity: ${a.title} (ID_${a.id})`);
+                                            setId(a.id);
+                                        }}
+                                        className="p-2 rounded-full hover:bg-red-100 dark:hover:bg-red-900 transition cursor-pointer"
+                                    >
+                                        <Trash2 className="w-5 h-5 text-red-500" />
                                     </button>
                                 </td>
                             </tr>

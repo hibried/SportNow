@@ -85,18 +85,6 @@ function SportActivitiesForm() {
         }
     }
 
-    // function onSubmit() {
-    //     const loading_message = Object.keys(activity).length > 0 ? "Updating..." : "Adding...";
-    //     const success_message = Object.keys(activity).length > 0 ? `'s detail has been updated` : ` has been added` ;
-
-    //     const loading_toast = toast.loading(loading_message);
-    //     setTimeout(() => {
-    //         navigate("/sport_activities");
-    //         toast.dismiss(loading_toast);
-    //         toast.success(success_message);
-    //     }, 2000);
-    // }
-
     async function onSubmit() {
         setIsLoading(true);
         const body = {

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import CountUp from "react-countup";
 import axios from "axios";
 
 const BASE_URL = "https://sport-reservation-api-bootcamp.do.dibimbing.id";
@@ -56,15 +57,21 @@ function Dashboard() {
             </div>
             <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-8">
                 <div className="flex flex-col items-center text-center bg-base-300 bg-[url('/Pattern.png')] min-w-50 py-12 rounded-box">
-                    <h1 className="text-7xl mb-3">{totalCategories}</h1>
+                    <h1 className="text-7xl mb-3">
+                        <CountUp end={totalCategories} duration={2} />
+                    </h1>
                     <h4 className="">Categories</h4>
                 </div>
                 <div className="flex flex-col items-center text-center bg-base-300 bg-[url('/Pattern.png')] min-w-50 py-12 rounded-box">
-                    <h1 className="text-7xl mb-3">{totalTransactions}</h1>
+                    <h1 className="text-7xl mb-3">
+                        <CountUp end={totalTransactions} duration={2} />
+                    </h1>
                     <h4 className="">Transactions</h4>
                 </div>
                 <div className="flex flex-col items-center text-center bg-base-300 bg-[url('/Pattern.png')] min-w-50 py-12 rounded-box">
-                    <h1 className="text-7xl mb-3">{totalSportActivities}</h1>
+                    <h1 className="text-7xl mb-3">
+                        <CountUp end={totalSportActivities} duration={2} />
+                    </h1>
                     <h4 className="">Sport Activities</h4>
                 </div>
             </div>

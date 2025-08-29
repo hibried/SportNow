@@ -1,115 +1,116 @@
-import { useState } from 'react'
 import { Toaster, toast } from 'sonner';
-
 import { Routes, Route, useNavigate } from 'react-router-dom';
 
-import LoginPage from './pages/LoginPage'
-import RegisterPage from './pages/RegisterPage';
-import LandingPage from './pages/LandingPage';
+import Navbar from "./components/Navbar";
+import LoginPage from './pages/guest/LoginPage'
+import RegisterPage from './pages/guest/RegisterPage';
+import LandingPage from './pages/public/LandingPage';
 
 import HomePage from './pages/HomePage';
-import DetailPage from './pages/DetailPage';
-import PaymentConfirmationPage from './pages/PaymentConfirmationPage';
-import MyTransactionPage from './pages/MyTransactionPage';
+import DetailPage from './pages/public/DetailPage';
+import ActivitiesPage from './pages/public/ActivitiesPage';
+import PaymentConfirmationPage from './pages/user/PaymentConfirmationPage';
+import MyTransactionPage from './pages/user/MyTransactionPage';
 
 import { Dashboard } from './components/admin/Dashboard';
 import { Categories } from './components/admin/Categories';
 import { SportActivities } from './components/admin/SportActivities';
 import { SportActivitiesForm } from './components/admin/SportActivitiesForm';
 import { Transactions } from './components/admin/Transactions';
+import { Invoice } from './components/admin/Invoice';
 
-import GuestRoute from './components/GuestRoute';
-import ProtectedRoute from './components/ProtectedRoute';
-
-import axios from 'axios';
-
-const BASE_URL = "https://sport-reservation-api-bootcamp.do.dibimbing.id";
+import RouteGuard from './components/routing/RouteGuard';
+import GuestRoute from './components/routing/GuestRoute';
+import PublicRoute from './components/routing/PublicRoute';
+import ProtectedRoute from './components/routing/ProtectedRoute';
 
 function App() {
-  const navigate = useNavigate();
 
-  async function Logout(){
-    try {
-      const token = localStorage.getItem("accessToken");
-      const response = await axios.post(`${BASE_URL}/api/v1/logout`, null, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: 'application/json',
-        },
-      });
-      console.log(response);
-      
-      if(response.status === 200){
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("role");
-        
-        const loading_toast = toast.loading("Logging out...");
-        setTimeout(() => {
-          navigate("/");
-          toast.dismiss(loading_toast);
-          toast.success('Successfully logged out');
-        }, 2000);
-      }
-    } catch (error) {
-      console.error(error);
-    }    
-  }
+	return (
+		<>
+			<Toaster />
+			<Routes>
+				{/* GUEST ONLY */}
+				<Route path='/login' element={
+					<RouteGuard type="guest">
+						<LoginPage />
+					</RouteGuard>
+				} />
+				<Route path='/register' element={
+					<RouteGuard type="guest">
+						<RegisterPage />
+					</RouteGuard>
+				} />
 
-  return (
-    <>
-      <Toaster />
-      <Routes>
-        <Route path='/login' element={
-          <GuestRoute>
-            <LoginPage />
-          </GuestRoute>
-        } />
-        <Route path='/register' element={
-          <GuestRoute>
-            <RegisterPage />
-          </GuestRoute>
-        } />
-        <Route path='/' element={
-          <GuestRoute>
-            <LandingPage />
-          </GuestRoute>
-        } />
-        {/* user only */}
-        <Route path='/activity' element={
-          <ProtectedRoute Logout={ Logout } children={ <HomePage /> } allowedRoles={ ["user"] } />
-        } />
-        <Route path='/activity/:id' element={
-          <ProtectedRoute Logout={ Logout } children={ <DetailPage /> } allowedRoles={ ["user"] } />
-        } />
-        <Route path='/transaction/:id/confirm' element={
-          <ProtectedRoute Logout={ Logout } children={ <PaymentConfirmationPage /> } allowedRoles={ ["user"] } />
-        } />
-        <Route path='/my-transaction' element={
-          <ProtectedRoute Logout={ Logout } children={ <MyTransactionPage /> } allowedRoles={ ["user"] } />
-        } />
+				{/* PUBLIC (USER & ADMIN) */}
+				<Route path='/' element={
+					<RouteGuard type="public">
+						<LandingPage />
+					</RouteGuard>
+				} />
 
-        {/* admin only */}
-        <Route path='/dashboard' element={
-          <ProtectedRoute Logout={ Logout } children={ Dashboard } allowedRoles={ ["admin"] } />
-        } />
-        <Route path='/categories' element={
-          <ProtectedRoute Logout={ Logout } children={ Categories } allowedRoles={ ["admin"] } />
-        } />
-        <Route path='/sport_activities' element={
-          <ProtectedRoute Logout={ Logout } children={ SportActivities } allowedRoles={ ["admin"] } />
-        } />
-        <Route path='/sport_activities/add' element={
-          <ProtectedRoute Logout={ Logout } children={ SportActivitiesForm } allowedRoles={ ["admin"] } />
-        } />
-        <Route path='/sport_activities/edit/:id' element={
-          <ProtectedRoute Logout={ Logout } children={ SportActivitiesForm } allowedRoles={ ["admin"] } />
-        } />
-        <Route path='/transactions' element={
-          <ProtectedRoute Logout={ Logout } children={ Transactions } allowedRoles={ ["admin"] } />
-        } />
-      </Routes>
-    </>
-  )
+				<Route path='/activities' element={
+					<RouteGuard type="public">
+						<ActivitiesPage />
+					</RouteGuard>
+				} />
+				<Route path='/activities/:id' element={
+					<RouteGuard type="public">
+						<DetailPage />
+					</RouteGuard>
+				} />
+
+				{/* USER ONLY */}
+				<Route path='/transaction/:id/confirm' element={
+					<RouteGuard type="protected" allowedRoles={["user"]}>
+						<PaymentConfirmationPage />
+					</RouteGuard>
+				} />
+				<Route path='/my-transaction' element={
+					<RouteGuard type="protected" allowedRoles={["user"]}>
+						<MyTransactionPage />
+					</RouteGuard>
+				} />
+
+				{/* ADMIN ONLY */}
+				<Route path='/dashboard' element={
+					<RouteGuard type="protected" allowedRoles={["admin"]}>
+						{ Dashboard }
+					</RouteGuard>
+				} />
+				<Route path='/categories' element={
+					<RouteGuard type="protected" allowedRoles={["admin"]}>
+						{ Categories }
+					</RouteGuard>
+				} />
+				<Route path='/sport_activities' element={
+					<RouteGuard type="protected" allowedRoles={["admin"]}>
+						{ SportActivities}
+					</RouteGuard>
+				} />
+				<Route path='/sport_activities/add' element={
+					<RouteGuard type="protected" allowedRoles={["admin"]}>
+						{ SportActivitiesForm }
+					</RouteGuard>
+				} />
+				<Route path='/sport_activities/edit/:id' element={
+					<RouteGuard type="protected" allowedRoles={["admin"]}>
+						{ SportActivitiesForm }
+					</RouteGuard>
+				} />
+				<Route path='/transactions' element={
+					<RouteGuard type="protected" allowedRoles={["admin"]}>
+						{ Transactions }
+					</RouteGuard>
+				} />
+				<Route path='/transactions/invoice/:id' element={
+					<RouteGuard type="protected" allowedRoles={["admin"]}>
+						{ Invoice }
+					</RouteGuard>
+				} />
+			</Routes>
+		</>
+	)
 }
 
 export default App

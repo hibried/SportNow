@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import ActivityDetail from "../components/ActivityDetail";
+import ActivityDetail from "../../components/public/ActivityDetail";
 import axios from "axios";
 
 const BASE_URL = "https://sport-reservation-api-bootcamp.do.dibimbing.id";

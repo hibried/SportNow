@@ -1,21 +1,27 @@
-import { useState } from "react"
-import { set } from "react-hook-form";
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
+import { Logout } from "../../components/Logout";
 import { toast } from 'sonner';
 
-function AdminNavbar({ Logout, Component }) {
+function AdminNavbar({ Component }) {
 
     const [isOpen, setIsOpen] = useState(false);
-    const [active, setActive] = useState("dashboard");
+    const [active, setActive] = useState(() => {
+        return localStorage.getItem("adminNavTab") || "dashboard";
+    });
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        localStorage.setItem("adminNavTab", active);
+    }, [active]);
 
     return (
         <div className={`drawer ${isOpen ? "drawer-open" : ""}`}>
             <input onChange={() => setIsOpen(!isOpen)} id="my-drawer-3" type="checkbox" className="drawer-toggle" />
             <div className="drawer-content flex flex-col">
                 {/* Navbar */}
-                <div className="navbar bg-base-300 w-full px-4 md:px-9 border-b-1 border-b-gray-300 sticky top-0 z-1">
+                <div className="navbar bg-base-300 w-full px-4 md:px-9 border-b-1 border-b-gray-300 sticky top-0 z-11">
                     <div className="navbar-start flex flex-none gap-7">
                         <label htmlFor="my-drawer-3" aria-label="open sidebar" className="cursor-pointer">
                             <svg
@@ -66,14 +72,14 @@ function AdminNavbar({ Logout, Component }) {
                                         src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
                                 </div>
                             </div>
-                            <ul tabIndex={0} className="menu dropdown-content bg-base-300 rounded-box z-1 mt-4 w-52 p-0 shadow-lg">
+                            <ul tabIndex={0} className="menu dropdown-content bg-base-300 rounded-box z-1 mt-4 w-52 p-0 shadow-lg border border-gray-300 dark:border-white">
                                 <li><a className="px-3 py-2 sm:px-5 sm:py-3 text-xs sm:text-sm"><img src="/home/account.png" alt="" /> Manage Account</a></li>
                                 <li className="m-0"></li>
                                 <li><a className="px-3 py-2 sm:px-5 sm:py-3 text-xs sm:text-sm"><img src="/home/key.png" className="mr-1" alt="" /> Change Password</a></li>
                                 <li className="m-0"></li>
                                 <li><a className="px-3 py-2 sm:px-5 sm:py-3 text-xs sm:text-sm"><img src="/home/reload.png" className="mr-1" alt="" /> Activity Log</a></li>
                                 <li className="m-0"></li>
-                                <li><a onClick={() => Logout()} className="px-3 py-2 sm:px-5 sm:py-3 text-xs sm:text-sm"><img src="/home/logout.png" className="mr-1" alt="" /> Log out</a></li>
+                                <li><a onClick={() => Logout(navigate)} className="px-3 py-2 sm:px-5 sm:py-3 text-xs sm:text-sm"><img src="/home/logout.png" className="mr-1" alt="" /> Log out</a></li>
                             </ul>
                         </div>
                     </div>
@@ -146,9 +152,7 @@ function AdminNavbar({ Logout, Component }) {
                     <li className="m-0 my-3"></li>
                     <li>
                         <button 
-                            onClick={() => {
-                                Logout();
-                            }} 
+                            onClick={() => Logout(navigate)} 
                             className="gap-4 btn dark:btn-soft btn-error justify-start text-start text-[14px] py-6 rounded-lg mx-2 lg:mx-4 hover:text-[##e0e7ff]"
                         >
                             <svg width="18" height="17" viewBox="0 0 18 17" fill="none" xmlns="http://www.w3.org/2000/svg">

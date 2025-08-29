@@ -45,7 +45,7 @@ function LoginPage() {
         localStorage.setItem("role", role);
 
         setTimeout(() => {
-            navigate(role === "user" ? "/activity" : "/dashboard");
+            navigate(role === "user" ? "/" : "/dashboard");
             console.log(loginResponse);
             toast.dismiss(loading_toast);
             toast.success('Successfully logged in');

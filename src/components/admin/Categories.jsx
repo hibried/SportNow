@@ -82,7 +82,7 @@ function Categories() {
             getCategories(page);
             document.getElementById("delete_modal").close();
         } catch (error) {
-            console.error(error);
+            console.error(error.response.data.message);
             setIsLoading(false);
         } finally {
             setIsLoading(false);
@@ -92,52 +92,103 @@ function Categories() {
     return (
         <div className="p-3 pt-5 sm:p-8">
             <div className="flex justify-between items-center mb-3 sm:mb-6">
-                <h1 className="text-2xl sm:text-[32px] font-semibold">Categories</h1>
+                {/* Title */}
+                <h1 className="text-2xl sm:text-[32px] font-extrabold bg-gradient-to-r from-indigo-600 to-cyan-500 text-transparent bg-clip-text dark:text-white">
+                    CATEGORIES
+                </h1>
+
+                {/* Pagination */}
                 <div className="join">
-                    <button onClick={goToPreviousPage} disabled={page === 1} className="join-item btn btn-neutral rounded-l-lg btn-sm sm:btn-md">«</button>
-                    <button className="hidden sm:block join-item btn btn-primary">{page}</button>
-                    <button onClick={goToNextPage}  disabled={page === totalPages} className="join-item btn btn-neutral rounded-r-lg btn-sm sm:btn-md">»</button>
+                    <button
+                        onClick={goToPreviousPage}
+                        disabled={page === 1}
+                        className="join-item btn btn-outline btn-sm sm:btn-md hover:from-indigo-600 hover:to-cyan-500 bg-gradient-to-r"
+                    >
+                        «
+                    </button>
+                    <button className="hidden sm:block join-item btn btn-primary btn-sm sm:btn-md">
+                        {page}
+                    </button>
+                    <button
+                        onClick={goToNextPage}
+                        disabled={page === totalPages}
+                        className="join-item btn btn-outline btn-sm sm:btn-md hover:from-indigo-600 hover:to-cyan-500 bg-gradient-to-r"
+                    >
+                        »
+                    </button>
                 </div>
-                <button className="btn btn-primary text-[12px] sm:text-[14px] rounded-lg btn-sm sm:btn-md" onClick={() => {
-                    openFormModal();
-                    setId("");
-                    setFormTitle("Create Category");
-                    setName("");
-                }}>
+
+                {/* Add Category */}
+                <button
+                    className="btn btn-primary btn-sm sm:btn-md rounded-lg shadow-md hover:shadow-xl transition-all"
+                    onClick={() => {
+                        openFormModal();
+                        setId("");
+                        setFormTitle("Create Category");
+                        setName("");
+                    }}
+                >
                     +
                 </button>
             </div>
-            <div className="overflow-x-auto rounded-box border border-base-content/5 px-1 pb-1 bg-base-300">
-                <table className="table rounded-box overflow-hidden">
-                    {/* head */}
-                    <thead>
+
+            {/* Table Container */}
+            <div
+                className="w-full rounded-tr-4xl rounded-bl-4xl shadow-xl border-4 border-transparent bg-base-100 overflow-x-auto max-h-190"
+                style={{
+                    background:
+                    "linear-gradient(90deg, #4f46e5, #06b6d4) border-box",
+                }}
+            >
+                <table className="table table-zebra w-full">
+                    {/* Table Header */}
+                    <thead className="text-white sticky top-0 z-10"
+                        style={{
+                            background:
+                            "linear-gradient(90deg, #4f46e5, #06b6d4) border-box",
+                        }}
+                    >
                         <tr>
                             <th>ID</th>
-                            <th>Name</th>
-                            <th>Action</th>
+                            <th>NAME</th>
+                            <th>ACTION</th>
                         </tr>
                     </thead>
-                    <tbody className="bg-base-100">
+
+                    {/* Table Body */}
+                    <tbody className="bg-base-300 relative">
                         {categories.map((c, index) => (
-                            <tr key={index}>
+                            <tr
+                                key={index}
+                                className="hover:bg-base-200 transition-all duration-200"
+                            >
                                 <th>{c.id}</th>
-                                <td>{c.name}</td>
-                                <td className="flex gap-2">
-                                    <button onClick={() => {
-                                        openFormModal();
-                                        setFormTitle(`Update Category: ID_${c.id}`);
-                                        setId(c.id);
-                                        setName(c.name);
-                                    }}>
-                                        <Edit className="w-5 h-5 text-blue-500 cursor-pointer" />
+                                <td className="text-nowrap">{c.name}</td>
+                                <td className="flex gap-3">
+                                    {/* Edit */}
+                                    <button
+                                        onClick={() => {
+                                            openFormModal();
+                                            setFormTitle(`Update Category: ID_${c.id}`);
+                                            setId(c.id);
+                                            setName(c.name);
+                                        }}
+                                        className="p-2 rounded-full hover:bg-indigo-100 dark:hover:bg-indigo-900 transition cursor-pointer"
+                                    >
+                                        <Edit className="w-5 h-5 text-indigo-600" />
                                     </button>
-                                    <button onClick={() => {
-                                        openDeleteModal();
-                                        setFormTitle(`Delete Category: ${c.name} (ID_${c.id})`);
-                                        setId(c.id);
-                                        setName("");
-                                    }}>
-                                        <Trash2 className="w-5 h-5 text-red-500 cursor-pointer" />
+
+                                    {/* Delete */}
+                                    <button
+                                        onClick={() => {
+                                            openDeleteModal();
+                                            setFormTitle(`Delete Category: ${c.name} (ID_${c.id})`);
+                                            setId(c.id);
+                                            setName("");
+                                        }}
+                                        className="p-2 rounded-full hover:bg-red-100 dark:hover:bg-red-900 transition cursor-pointer"
+                                    >
+                                        <Trash2 className="w-5 h-5 text-red-500" />
                                     </button>
                                 </td>
                             </tr>

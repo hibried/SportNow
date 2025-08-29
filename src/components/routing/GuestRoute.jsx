@@ -1,11 +1,11 @@
-import Navbar from "./Navbar";
+import Navbar from "../public/Navbar";
 import { Navigate, Outlet } from "react-router-dom";
 
 const GuestRoute = ({ children }) => {
     const token = localStorage.getItem("accessToken");
 
     if (token) {
-        return <Navigate to="/activity" replace />;
+        return <Navigate to="/" replace />;
     }
 
     return <>
