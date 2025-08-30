@@ -1,0 +1,33 @@
+import { motion } from "framer-motion";
+import { ArrowRight, Search, Shield } from "lucide-react";
+
+function Hero() {
+	return (
+		<section className="relative">
+			{/* Fixed sports background */}
+			<div
+				className="bg-cover bg-center relative flex items-center"
+				style={{
+				backgroundImage:
+					"url('https://wallpapers.com/images/featured/best-sports-9mo6eiyv8hxj5jln.jpg')",
+				}}
+			>
+				<div className="absolute inset-0 bg-gradient-to-br from-green-500 to-blue-600 opacity-75" />
+				<div className="max-w-6xl mx-auto px-4 py-16 md:py-20 relative z-10 w-full">
+					<motion.div
+						initial={{ opacity: 0, y: 30 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{ duration: 0.7 }}
+						className=""
+					>
+						<h1 className="text-4xl md:text-6xl font-extrabold leading-tight text-center text-white">
+							<span className="">ACTIVITIES</span>
+						</h1>
+					</motion.div>
+				</div>
+			</div>
+		</section>
+	);
+}
+
+export default Hero;

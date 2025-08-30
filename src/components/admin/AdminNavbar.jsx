@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 import { Logout } from "../../components/Logout";
 import { toast } from 'sonner';
+import ThemeToggle from "../ThemeController";
 
 function AdminNavbar({ Component }) {
 
@@ -64,6 +65,7 @@ function AdminNavbar({ Component }) {
                                 <span className="badge badge-xs badge-primary indicator-item"></span>
                             </div>
                         </button>
+                        <ThemeToggle />
                         <div className="dropdown dropdown-end">
                             <div tabIndex="0" role="button" className="btn btn-ghost btn-circle avatar lg:tooltip lg:tooltip-left" data-tip="Eve Jolt">
                                 <div className="w-10 rounded-full">

@@ -6,7 +6,6 @@ import LoginPage from './pages/guest/LoginPage'
 import RegisterPage from './pages/guest/RegisterPage';
 import LandingPage from './pages/public/LandingPage';
 
-import HomePage from './pages/HomePage';
 import DetailPage from './pages/public/DetailPage';
 import ActivitiesPage from './pages/public/ActivitiesPage';
 import PaymentConfirmationPage from './pages/user/PaymentConfirmationPage';
@@ -20,9 +19,9 @@ import { Transactions } from './components/admin/Transactions';
 import { Invoice } from './components/admin/Invoice';
 
 import RouteGuard from './components/routing/RouteGuard';
-import GuestRoute from './components/routing/GuestRoute';
-import PublicRoute from './components/routing/PublicRoute';
-import ProtectedRoute from './components/routing/ProtectedRoute';
+// import GuestRoute from './components/routing/GuestRoute';
+// import PublicRoute from './components/routing/PublicRoute';
+// import ProtectedRoute from './components/routing/ProtectedRoute';
 
 function App() {
 
@@ -61,9 +60,9 @@ function App() {
 				} />
 
 				{/* USER ONLY */}
-				<Route path='/transaction/:id/confirm' element={
+				<Route path='/my-transaction/:id' element={
 					<RouteGuard type="protected" allowedRoles={["user"]}>
-						<PaymentConfirmationPage />
+						<Invoice />
 					</RouteGuard>
 				} />
 				<Route path='/my-transaction' element={

@@ -3,7 +3,6 @@ import CountUp from "react-countup";
 import axios from "axios";
 
 const BASE_URL = "https://sport-reservation-api-bootcamp.do.dibimbing.id";
-const BEARER_TOKEN = localStorage.getItem("accessToken"); // from Postman collection
 
 function Dashboard() {
     const [totalCategories, setTotalCategories] = useState(0);
@@ -20,10 +19,11 @@ function Dashboard() {
     }
 
     async function countTransactions() {
+        const token = localStorage.getItem("accessToken");
         try {
             const response = await axios.get(`${BASE_URL}/api/v1/all-transaction`, {
                 headers: {
-                    Authorization: `Bearer ${BEARER_TOKEN}`,
+                    Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json',
                     Accept: 'application/json',
                 },

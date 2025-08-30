@@ -16,11 +16,16 @@ async function Logout(navigate) {
         if (response.status === 200) {
             localStorage.clear();
             const loading_toast = toast.loading("Logging out...");
-            setTimeout(() => {
-                navigate("/");
-                toast.dismiss(loading_toast);
-                toast.success("Successfully logged out");
-            }, 2000);
+
+            // return a promise that resolves after setTimeout
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    navigate("/");
+                    toast.dismiss(loading_toast);
+                    toast.success("Successfully logged out");
+                    resolve(); // ✅ signals "finished"
+                }, 2000);
+            });
         }
     } catch (error) {
         console.error(error);

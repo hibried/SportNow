@@ -3,14 +3,14 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 import Navbar from "../../components/public/Navbar";
-import Hero from "../../components/landing_page/Hero";
-import Features from "../../components/landing_page/Features";
-import ActivitiesShowcase from "../../components/landing_page/ActivitiesShowcase";
-import Pricing from "../../components/landing_page/Pricing";
-import TestimonialsCarousel from "../../components/landing_page/TestimonialsCarousel";
-import FAQ from "../../components/landing_page/FAQ";
-import CTA from "../../components/landing_page/CTA";
-import Footer from "../../components/landing_page/Footer";
+import Hero from "../../components/public/landing_page/Hero";
+import Features from "../../components/public/landing_page/Features";
+import ActivitiesShowcase from "../../components/public/landing_page/ActivitiesShowcase";
+import Pricing from "../../components/public/landing_page/Pricing";
+import TestimonialsCarousel from "../../components/public/landing_page/TestimonialsCarousel";
+import FAQ from "../../components/public/landing_page/FAQ";
+import CTA from "../../components/public/landing_page/CTA";
+import Footer from "../../components/public/landing_page/Footer";
 
 const BASE_URL = "https://sport-reservation-api-bootcamp.do.dibimbing.id";
 
@@ -44,6 +44,8 @@ export default function LandingPage() {
 	const [selectedCategory, setSelectedCategory] = useState("");
 	const [selectedProvince, setSelectedProvince] = useState("");
 	const [selectedCity, setSelectedCity] = useState("");
+
+	const [isActivityLoading, setIsActivityLoading] = useState(false);
 
 	/* Fetchers */
 	useEffect(() => {
@@ -85,6 +87,7 @@ export default function LandingPage() {
 	};
 
 	const fetchActivities = async (pageNum = 1, append = false) => {
+		setIsActivityLoading(true);
 		try {
 			const res = await axios.get(`${BASE_URL}/api/v1/sport-activities`, {
 				params: {
@@ -97,11 +100,13 @@ export default function LandingPage() {
 
 			const data = res.data.result || {};
 			// setActivities((prev) => (append ? [...prev, ...(data.data || [])] : data.data || []));
-			setActivities(data.data || [])
+			setActivities(data.data || []);
 			// setPage(data.current_page || 1);
 			// setTotalPages(data.last_page || 1);
 		} catch (err) {
 			console.error("fetchActivities error:", err);
+		} finally {
+			setIsActivityLoading(false);
 		}
 	};
 
@@ -127,7 +132,6 @@ export default function LandingPage() {
 
 	return (
 		<div className="min-h-screen bg-base-100 text-base-content">
-			<Navbar />
 			<Hero
 				categories={categories}
 				provinces={provinces}
@@ -139,12 +143,13 @@ export default function LandingPage() {
 				selectedCity={selectedCity}
 				setSelectedCity={setSelectedCity}
 				onSearch={handleSearch}
+				openActivity={() => navigate("/activities")}
 			/>
 
 			<main>
 				<Features container={container} item={item} />
 
-				<ActivitiesShowcase activities={activities} onOpenActivity={openActivity} />
+				<ActivitiesShowcase activities={activities} isActivityLoading={isActivityLoading} onOpenActivity={openActivity} />
 
 				{/* Load more */}
 				{/* {page < totalPages && (

@@ -20,7 +20,7 @@ export default function DetailPage() {
                     'Accept': "application/json",
                 },
             });
-            console.log(response.data.result);
+            // console.log(response.data.result);
             setActivity(response.data.result);
         } catch (error) {
             console.error(error);

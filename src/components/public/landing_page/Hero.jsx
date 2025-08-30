@@ -12,19 +12,20 @@ function Hero({
 	selectedCity,
 	setSelectedCity,
 	onSearch,
+	openActivity
 }) {
 	return (
 		<section className="relative">
 			{/* Fixed sports background */}
 			<div
-				className="h-[60vh] bg-cover bg-center relative flex items-center"
+				className="h-[100vh] sm:h-[60vh] bg-cover bg-top relative flex items-center"
 				style={{
 				backgroundImage:
-					"url('https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=1600&q=80')",
+					"url('https://images5.alphacoders.com/109/1093585.jpg')",
 				}}
 			>
 				<div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
-					<div className="max-w-6xl mx-auto px-4 py-16 md:py-24 relative z-10 w-full">
+				<div className="max-w-6xl mx-auto px-4 py-16 md:py-24 relative z-10 w-full">
 					<motion.div
 						initial={{ opacity: 0, y: 30 }}
 						animate={{ opacity: 1, y: 0 }}
@@ -32,22 +33,22 @@ function Hero({
 						className="grid lg:grid-cols-2 gap-8 items-center"
 					>
 						<div className="text-white">
-						<h1 className="text-4xl md:text-6xl font-extrabold leading-tight">
-							Find & Book Your Next <span className="text-orange-400">Sport Activity</span>
-						</h1>
-						<p className="mt-4 max-w-2xl text-lg opacity-90">
-							Futsal, badminton, tennis — discover events and venues near you, reserve instantly,
-							and play with your community.
-						</p>
+							<h1 className="text-4xl md:text-6xl font-extrabold leading-tight">
+								Find & Book Your Next <span className="text-orange-400">Sport Activity</span>
+							</h1>
+							<p className="mt-4 max-w-2xl text-lg opacity-90">
+								Futsal, badminton, tennis — discover events and venues near you, reserve instantly,
+								and play with your community.
+							</p>
 
-						<div className="mt-6 flex gap-3 flex-wrap">
-							<a href="#activities" className="btn btn-primary rounded-full px-6">
-								<ArrowRight className="h-4 w-4" /> Browse Activities
-							</a>
-							{/* <a href="#venues" className="btn btn-ghost rounded-full px-6">
-							Become a Venue
-							</a> */}
-						</div>
+							<div className="mt-6 flex gap-3 flex-wrap">
+								<button onClick={openActivity} href="#activities" className="btn btn-primary rounded-full px-6">
+									<ArrowRight className="h-4 w-4" /> Browse Activities
+								</button>
+								{/* <a href="#venues" className="btn btn-ghost rounded-full px-6">
+								Become a Venue
+								</a> */}
+							</div>
 						</div>
 
 						{/* Search / Filters Card */}

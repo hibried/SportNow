@@ -11,7 +11,7 @@ const RouteGuard = ({ children, type = "public", allowedRoles = [] }) => {
         if (token) return <Navigate to="/" replace />;
         return (
             <>
-                <Navbar />
+                {/* <Navbar /> */}
                 { children || <Outlet /> }
             </>
         );

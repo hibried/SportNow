@@ -1,11 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { Logout } from "../../components/Logout";
+import ThemeToggle from "../ThemeController";
 
 function Navbar() {
   	const [open, setOpen] = useState(false);
+	const [bearerToken, setBearerToken] = useState("");
 	const navigate = useNavigate();
 
+	useEffect(() => {
+		setBearerToken(localStorage.getItem("accessToken"));
+	}, []);
+	
   	return (
 		<>
 			<div className="navbar sticky top-0 z-50 bg-base-100/80 backdrop-blur border-b border-base-200">
@@ -27,9 +34,11 @@ function Navbar() {
 						<li>
 							<button onClick={() => navigate("/activities")}>Activities</button>
 						</li>
-						{/* <li>
-							<a href="#venues">Venues</a>
-						</li> */}
+						{bearerToken && (
+							<li>
+								<button onClick={() => navigate("/my-transaction")}>My Transaction</button>
+							</li>
+						)}
 						<li>
 							<a href="#features">Why SportNow</a>
 						</li>
@@ -40,8 +49,41 @@ function Navbar() {
 				</div>
 
 				<div className="navbar-end gap-2">
-					<a className="btn btn-ghost hidden md:inline-flex">Sign in</a>
-					<a className="btn btn-primary">Sign up</a>
+					<ThemeToggle />
+					{!bearerToken ? (
+						<div>
+							<button onClick={() => navigate("/login")} className="btn btn-ghost hidden md:inline-flex">Sign in</button>
+							<button onClick={() => navigate("/register")} className="btn btn-primary">Sign up</button>
+						</div>
+					) : (
+						<div className="dropdown dropdown-end">
+                            <div tabIndex="0" role="button" className="btn btn-ghost btn-circle avatar lg:tooltip lg:tooltip-left" data-tip="Eve Jolt">
+                                <div className="w-10 rounded-full">
+                                    <img
+                                        alt="Tailwind CSS Navbar component"
+                                        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+									/>
+                                </div>
+                            </div>
+                            <ul tabIndex={0} className="menu dropdown-content bg-base-100/90 rounded-box z-1 mt-4 w-52 p-0 shadow-lg">
+                                <li><a className="px-3 py-2 sm:px-5 sm:py-3 text-xs sm:text-sm"><img src="/home/account.png" alt="" /> Edit Profile</a></li>
+                                <li className="m-0"></li>
+                                <li><a className="px-3 py-2 sm:px-5 sm:py-3 text-xs sm:text-sm"><img src="/home/key.png" className="mr-1" alt="" /> Change Password</a></li>
+                                <li className="m-0"></li>
+                                <li>
+									<a
+										onClick={async () => {
+											await Logout(navigate)
+											setBearerToken(null);
+										}}
+										className="px-3 py-2 sm:px-5 sm:py-3 text-xs sm:text-sm">
+											<img src="/home/logout.png" className="mr-1" alt="" /> Log out
+									</a>
+								</li>
+                            </ul>
+                        </div>
+					)}
+					
 				</div>
 			</div>
 
@@ -66,15 +108,18 @@ function Navbar() {
 
 				<ul className="menu mt-6">
 					<li>
-						<a href="#activities" onClick={() => setOpen(false)}>
+						<a href="#activities" onClick={() => {
+							setOpen(false);
+							navigate("/activities");
+						}}>
 							Activities
 						</a>
 					</li>
-					<li>
+					{/* <li>
 						<a href="#venues" onClick={() => setOpen(false)}>
 							Venues
 						</a>
-					</li>
+					</li> */}
 					<li>
 						<a href="#features" onClick={() => setOpen(false)}>
 							Why SportNow
@@ -85,9 +130,11 @@ function Navbar() {
 							FAQ
 						</a>
 					</li>
-					<li className="mt-3">
-						<a className="btn btn-primary">Get Started</a>
-					</li>
+					{!bearerToken && 
+						<li className="mt-3">
+							<button onClick={() => navigate("/register")} className="btn btn-primary">Sign up</button>
+						</li>
+					}
 				</ul>
 			</div>
 		</>

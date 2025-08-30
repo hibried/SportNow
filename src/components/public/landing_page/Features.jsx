@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Activity, Dumbbell, Users } from "lucide-react";
+import { Activity, Dumbbell, UsersRound } from "lucide-react";
 
 function Features({ container, item }) {
 	const features = [
@@ -9,7 +9,7 @@ function Features({ container, item }) {
 			desc: "Reserve venues in seconds with transparent pricing and instant confirmation.",
 		},
 		{
-			icon: <Users className="h-6 w-6 text-orange-500" />,
+			icon: <UsersRound className="h-6 w-6 text-orange-500" />,
 			title: "Play with Community",
 			desc: "Join public games or invite friends to private matches.",
 		},
