@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
 
 const BASE_URL = "https://sport-reservation-api-bootcamp.do.dibimbing.id";
-const BEARER_TOKEN = localStorage.getItem("accessToken"); // from Postman collection
 
 export default function HomePage() {
     const [categories, setCategories] = useState([]);
@@ -16,10 +15,11 @@ export default function HomePage() {
     const navigate = useNavigate();
 
     async function fetchCategories() {
+        const token = localStorage.getItem("accessToken");
         try {
             const response = await axios.get(`${BASE_URL}/api/v1/sport-categories`, {
                 headers: {
-                    Authorization: `Bearer ${BEARER_TOKEN}`,
+                    Authorization: `Bearer ${token}`,
                     Accept: "application/json",
                 },
             });
@@ -36,6 +36,7 @@ export default function HomePage() {
     }, []);
 
     async function fetchActivities(category, pageNum) {
+        const token = localStorage.getItem("accessToken");
         let url = `${BASE_URL}/api/v1/sport-activities?is_paginate=true&per_page=9&page=${pageNum}`;
         if (category) {
             url += `&sport_category_id=${category}`;
@@ -44,7 +45,7 @@ export default function HomePage() {
         try {
             const response = await axios.get(url, {
                 headers: {
-                    Authorization: `Bearer ${BEARER_TOKEN}`,
+                    Authorization: `Bearer ${token}`,
                     Accept: "application/json",
                 },
             });

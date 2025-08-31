@@ -5,7 +5,6 @@ import { toast } from "sonner";
 import axios from "axios";
 
 const BASE_URL = "https://sport-reservation-api-bootcamp.do.dibimbing.id";
-const BEARER_TOKEN = localStorage.getItem("accessToken"); // from Postman collection
 
 function SportActivitiesForm() {
     const { id } = useParams();
@@ -87,6 +86,7 @@ function SportActivitiesForm() {
 
     async function onSubmit() {
         setIsLoading(true);
+        const token = localStorage.getItem("accessToken");
         const body = {
             sport_category_id: Number(sportCategoryId),
             city_id: Number(cityId),
@@ -110,7 +110,7 @@ function SportActivitiesForm() {
         try {
             const response = await axios.post(`${BASE_URL}/api/v1/sport-activities/${method}`, body, {
                 headers: {
-                    Authorization: `Bearer ${BEARER_TOKEN}`,
+                    Authorization: `Bearer ${token}`,
                     Accept: 'application/json',
                 },
             });

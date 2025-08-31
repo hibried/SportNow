@@ -4,7 +4,6 @@ import ActivityDetail from "../../components/public/ActivityDetail";
 import axios from "axios";
 
 const BASE_URL = "https://sport-reservation-api-bootcamp.do.dibimbing.id";
-const BEARER_TOKEN = localStorage.getItem("accessToken"); // from Postman collection
 
 export default function DetailPage() {
     const { id } = useParams();
@@ -12,10 +11,11 @@ export default function DetailPage() {
 
     async function fetchActivityDetail() {
         // Fetch activity detail
+        const token = localStorage.getItem("accessToken");
         try {
             const response = await axios.get(`${BASE_URL}/api/v1/sport-activities/${id}`, {
                 headers: {
-                    'Authorization': `Bearer ${BEARER_TOKEN}`,
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': "application/json",
                     'Accept': "application/json",
                 },

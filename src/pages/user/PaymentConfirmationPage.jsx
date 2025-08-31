@@ -3,7 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 const BASE_URL = "https://sport-reservation-api-bootcamp.do.dibimbing.id";
-const BEARER_TOKEN = localStorage.getItem("accessToken"); // from Postman collection
 
 function PaymentConfirmationPage() {
 	const { id } = useParams();
@@ -12,10 +11,11 @@ function PaymentConfirmationPage() {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	async function fetchTransactionById() {
+		const token = localStorage.getItem("accessToken");
 		try {
 			const response = await axios.get(`${BASE_URL}/api/v1/transaction/${id}`, {
 				headers: {
-				Authorization: `Bearer ${BEARER_TOKEN}`,
+				Authorization: `Bearer ${token}`,
 				Accept: "application/json",
 				},
 			});

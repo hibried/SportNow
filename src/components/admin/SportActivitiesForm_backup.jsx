@@ -5,7 +5,6 @@ import { toast } from "sonner";
 import axios from "axios";
 
 const BASE_URL = "https://sport-reservation-api-bootcamp.do.dibimbing.id";
-const BEARER_TOKEN = localStorage.getItem("accessToken"); // from Postman collection
 
 function SportActivitiesForm() {
     const { id } = useParams();

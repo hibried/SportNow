@@ -3,7 +3,6 @@ import { Edit, Trash2 } from "lucide-react";
 import axios from "axios";
 
 const BASE_URL = "https://sport-reservation-api-bootcamp.do.dibimbing.id";
-const BEARER_TOKEN = localStorage.getItem("accessToken"); // from Postman collection
 
 function Categories() {
     const [categories, setCategories] = useState([]);
@@ -50,13 +49,14 @@ function Categories() {
 
     async function handleSubmit() {
         const method = (id === "") ? "create" : `update/${id}`;
+        const token = localStorage.getItem("accessToken");
         setIsLoading(true);
         try {
             const response = await axios.post(`${BASE_URL}/api/v1/sport-categories/${method}`, {
                 name: name
             }, {
                 headers: {
-                    Authorization: `Bearer ${BEARER_TOKEN}`,
+                    Authorization: `Bearer ${token}`,
                 },
             });
             console.log(response);
@@ -72,10 +72,11 @@ function Categories() {
 
     async function handleDelete() {
         setIsLoading(true);
+        const token = localStorage.getItem("accessToken");
         try {
             const response = await axios.delete(`${BASE_URL}/api/v1/sport-categories/delete/${id}`, {
                 headers: {
-                    Authorization: `Bearer ${BEARER_TOKEN}`,
+                    Authorization: `Bearer ${token}`,
                 },
             });
             console.log(response);

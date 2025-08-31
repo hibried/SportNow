@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const BASE_URL = "https://sport-reservation-api-bootcamp.do.dibimbing.id";
-const BEARER_TOKEN = localStorage.getItem("accessToken"); // from Postman collection
 
 function SportActivities() {
     const [activities, setActivities] = useState([]);
@@ -92,10 +91,11 @@ function SportActivities() {
 
     async function handleDelete() {
         setIsLoading(true);
+        const token = localStorage.getItem("accessToken");
         try {
             const response = await axios.delete(`${BASE_URL}/api/v1/sport-activities/delete/${id}`, {
                 headers: {
-                    Authorization: `Bearer ${BEARER_TOKEN}`,
+                    Authorization: `Bearer ${token}`,
                 },
             });
             console.log(response);
