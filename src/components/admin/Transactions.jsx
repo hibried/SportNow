@@ -4,7 +4,6 @@ import { FileCheck, FileX, Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const BASE_URL = "https://sport-reservation-api-bootcamp.do.dibimbing.id";
-const BEARER_TOKEN = localStorage.getItem("accessToken"); // from Postman collection
 
 function Transactions() {
     const [transactions, setTransactions] = useState([]);
@@ -15,10 +14,11 @@ function Transactions() {
     const navigate = useNavigate();
 
     const getTransactions = async () => {
+        const token = localStorage.getItem("accessToken");
         try {
             const response = await axios.get(`${BASE_URL}/api/v1/all-transaction?is_paginate=false`, {
                 headers: {
-                    Authorization: `Bearer ${BEARER_TOKEN}`,
+                    Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
                     Accept: "application/json",
                 },
