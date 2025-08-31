@@ -84,10 +84,13 @@ function Invoice() {
                 },
             });
             // console.log(response.data.result);
-            setTransaction(response.data.result);
+            if(response.data.result){
+                setTransaction(response.data.result);
+            } else {
+                navigate(-1);
+            }
         } catch (error) {
             console.error(error.response?.data?.message || error.message);
-            navigate(-1);
         }
     }
 
