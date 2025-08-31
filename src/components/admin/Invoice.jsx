@@ -7,7 +7,6 @@ import axios from "axios";
 import Footer from "../public/landing_page/Footer";
 
 const BASE_URL = "https://sport-reservation-api-bootcamp.do.dibimbing.id";
-const BEARER_TOKEN = localStorage.getItem("accessToken"); // from Postman collection
 const CURRENT_ROLE = localStorage.getItem("role");
 
 // Currency formatter for Indonesian Rupiah
@@ -59,10 +58,11 @@ function Invoice() {
     };
 
     async function getCurrentUser() {
+        const token = localStorage.getItem("accessToken");
         try {
             const response = await axios.get(`${BASE_URL}/api/v1/me`, {
                 headers: {
-                    Authorization: `Bearer ${BEARER_TOKEN}`,
+                    Authorization: `Bearer ${token}`,
                     Accept: 'application/json',
                 },
             });
@@ -73,10 +73,11 @@ function Invoice() {
     }
 
     async function getTransaction() {
+        const token = localStorage.getItem("accessToken");
         try {
             const response = await axios.get(`${BASE_URL}/api/v1/transaction/${id}`, {
                 headers: {
-                    'Authorization': `Bearer ${BEARER_TOKEN}`,
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
                 },
@@ -99,12 +100,13 @@ function Invoice() {
 
     async function updateTransactionStatus() {
         setIsLoading(true);
+        const token = localStorage.getItem("accessToken");
         try {
             const response = await axios.post(`${BASE_URL}/api/v1/transaction/update-status/${id}`, {
                 status: newStatus.toLowerCase()
             }, {
                 headers: {
-                    Authorization: `Bearer ${BEARER_TOKEN}`,
+                    Authorization: `Bearer ${token}`,
                     Accept: 'application/json',
                 },
             });
@@ -123,13 +125,14 @@ function Invoice() {
 
     // FOR USER
     const handleFileSubmit = async(url) => {
+        const token = localStorage.getItem("accessToken");
         try {
             const response = await axios.post(`${BASE_URL}/api/v1/transaction/update-proof-payment/${id}`, 
                 {
                     proof_payment_url: url,
                 }, {
                     headers: {
-                        Authorization: `Bearer ${BEARER_TOKEN}`,
+                        Authorization: `Bearer ${token}`,
                         Accept: 'application/json',
                     },
                 }
