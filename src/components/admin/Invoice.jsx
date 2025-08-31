@@ -188,7 +188,7 @@ function Invoice() {
         // if currentUser not loaded yet, wait
         if (!currentUser?.id) return;
 
-        if (currentUser.id !== transaction.user_id) {
+        if (currentUser.id !== transaction.user_id && CURRENT_ROLE !== "admin") {
             toast.error("You are not authorized to view this invoice.");
             // redirect to a safe page (adjust as desired)
             navigate("/my-transaction");
