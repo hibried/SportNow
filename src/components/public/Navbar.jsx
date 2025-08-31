@@ -18,17 +18,19 @@ function Navbar() {
 	const [myName, setMyName] = useState("");
 	const getMe = async () => {
         const token = localStorage.getItem("accessToken");
-        try {
-            const response = await axios.get(`${BASE_URL}/api/v1/me`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    Accept: "application/json",
-                },
-            });
-            setMyName(response.data.data.name);
-        } catch (error) {
-            console.error(error);
-        }
+		if(token){
+			try {
+				const response = await axios.get(`${BASE_URL}/api/v1/me`, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+						Accept: "application/json",
+					},
+				});
+				setMyName(response.data.data.name);
+			} catch (error) {
+				console.error(error);
+			}
+		}
     }
 
 	useEffect(() => {
