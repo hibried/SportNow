@@ -3,13 +3,36 @@ import { Menu, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Logout } from "../../components/Logout";
 import ThemeToggle from "../ThemeController";
+import EditAccountModal from "./EditAccount";
+import axios from "axios";
+
+const BASE_URL = "https://sport-reservation-api-bootcamp.do.dibimbing.id";
 
 function Navbar() {
   	const [open, setOpen] = useState(false);
 	const [bearerToken, setBearerToken] = useState("");
 	const navigate = useNavigate();
 
+	const [modalOpen, setModalOpen] = useState(false);
+
+	const [myName, setMyName] = useState("");
+	const getMe = async () => {
+        const token = localStorage.getItem("accessToken");
+        try {
+            const response = await axios.get(`${BASE_URL}/api/v1/me`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Accept: "application/json",
+                },
+            });
+            setMyName(response.data.data.name);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
 	useEffect(() => {
+		getMe();
 		setBearerToken(localStorage.getItem("accessToken"));
 	}, []);
 	
@@ -57,7 +80,7 @@ function Navbar() {
 						</div>
 					) : (
 						<div className="dropdown dropdown-end">
-                            <div tabIndex="0" role="button" className="btn btn-ghost btn-circle avatar lg:tooltip lg:tooltip-left" data-tip="Eve Jolt">
+                            <div tabIndex="0" role="button" className="btn btn-ghost btn-circle avatar lg:tooltip lg:tooltip-left" data-tip={myName}>
                                 <div className="w-10 rounded-full">
                                     <img
                                         alt="Tailwind CSS Navbar component"
@@ -66,9 +89,7 @@ function Navbar() {
                                 </div>
                             </div>
                             <ul tabIndex={0} className="menu dropdown-content bg-base-100/90 rounded-box z-1 mt-4 w-52 p-0 shadow-lg">
-                                <li><a className="px-3 py-2 sm:px-5 sm:py-3 text-xs sm:text-sm"><img src="/home/account.png" alt="" /> Edit Profile</a></li>
-                                <li className="m-0"></li>
-                                <li><a className="px-3 py-2 sm:px-5 sm:py-3 text-xs sm:text-sm"><img src="/home/key.png" className="mr-1" alt="" /> Change Password</a></li>
+                                <li><a onClick={() => setModalOpen(true)} className="px-3 py-2 sm:px-5 sm:py-3 text-xs sm:text-sm"><img src="/home/account.png" alt="" /> Edit Account</a></li>
                                 <li className="m-0"></li>
                                 <li>
 									<a
@@ -90,7 +111,7 @@ function Navbar() {
 			{/* Mobile Drawer */}
 			<div
 				className={`fixed inset-0 z-40 bg-black/40 transition-opacity ${
-				open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+					open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
 				}`}
 				onClick={() => setOpen(false)}
 			/>
@@ -108,18 +129,23 @@ function Navbar() {
 
 				<ul className="menu mt-6">
 					<li>
-						<a href="#activities" onClick={() => {
+						<a onClick={() => {
 							setOpen(false);
 							navigate("/activities");
 						}}>
 							Activities
 						</a>
 					</li>
-					{/* <li>
-						<a href="#venues" onClick={() => setOpen(false)}>
-							Venues
-						</a>
-					</li> */}
+					{bearerToken && (
+						<li>
+							<a onClick={() => {
+								setOpen(false);
+								navigate("/my-transaction");
+							}}>
+								My Transaction
+							</a>
+						</li>
+					)}
 					<li>
 						<a href="#features" onClick={() => setOpen(false)}>
 							Why SportNow
@@ -137,6 +163,7 @@ function Navbar() {
 					}
 				</ul>
 			</div>
+			<EditAccountModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
 		</>
 	);
 }

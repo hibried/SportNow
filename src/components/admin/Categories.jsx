@@ -93,7 +93,7 @@ function Categories() {
         <div className="p-3 pt-5 sm:p-8">
             <div className="flex justify-between items-center mb-3 sm:mb-6">
                 {/* Title */}
-                <h1 className="text-2xl sm:text-[32px] font-extrabold bg-gradient-to-r from-indigo-600 to-cyan-500 text-transparent bg-clip-text dark:text-white">
+                <h1 className="text-2xl sm:text-[32px] font-extrabold bg-gradient-to-r from-indigo-600 to-cyan-500 text-transparent bg-clip-text dark:text-base-content">
                     CATEGORIES
                 </h1>
 
