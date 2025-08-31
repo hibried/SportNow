@@ -7,7 +7,7 @@ import axios from "axios";
 import Footer from "../public/landing_page/Footer";
 
 const BASE_URL = "https://sport-reservation-api-bootcamp.do.dibimbing.id";
-const CURRENT_ROLE = localStorage.getItem("role");
+// const CURRENT_ROLE = localStorage.getItem("role");
 
 // Currency formatter for Indonesian Rupiah
 const formatCurrency = (value) =>
@@ -24,6 +24,7 @@ function Invoice() {
     const [transaction, setTransaction] = useState({});
     const [proofPaymentUrl, setProofPaymentUrl] = useState("");
     const [currentUser, setCurrentUser] = useState({});
+    const [currentRole, setCurrentRole] = useState("");
     const [isOwner, setIsOwner] = useState(false); // <-- changed to boolean
 
     const [newStatus, setNewStatus] = useState("");
@@ -176,31 +177,32 @@ function Invoice() {
 	};
     //
 
+    useEffect(() => {
+        getCurrentUser();
+        getTransaction();
+        setCurrentRole(localStorage.getItem("role"));
+    }, []);
+
     // Ownership check: only owner (or admin) can view invoice
     useEffect(() => {
         // wait until both are loaded
         if (!transaction?.user_id) return; // transaction not loaded yet
         // if current role is admin, allow
-        if (CURRENT_ROLE === "admin") {
+        if (currentRole === "admin") {
             setIsOwner(true);
             return;
         }
         // if currentUser not loaded yet, wait
         if (!currentUser?.id) return;
 
-        if (currentUser.id !== transaction.user_id && CURRENT_ROLE !== "admin") {
+        if (currentUser.id !== transaction.user_id && currentRole !== "admin") {
             toast.error("You are not authorized to view this invoice.");
             // redirect to a safe page (adjust as desired)
             navigate("/my-transaction");
         } else {
             setIsOwner(true);
         }
-    }, [currentUser, transaction, navigate]);
-
-    useEffect(() => {
-        getCurrentUser();
-        getTransaction();
-    }, []);
+    }, [currentUser, transaction, navigate, currentRole]);
 
     useEffect(() => {
         setProofPaymentUrl(
@@ -235,7 +237,7 @@ function Invoice() {
                                 <p className="text-xs sm:text-sm">Invoice No:</p>
                                 <p className="text-base sm:text-lg font-semibold">{transaction?.invoice_id}</p>
                                 <div className="flex flex-row-reverse sm:flex-row justify-end items-center gap-6 mt-2">
-                                    {CURRENT_ROLE === "admin" && transaction?.status === "pending" && (
+                                    {currentRole === "admin" && transaction?.status === "pending" && (
                                         <div className="flex gap-2">
                                             <button
                                                 className="flex items-center justify-center w-8 h-8 rounded-full bg-green-500 hover:bg-green-600 cursor-pointer" 
@@ -357,7 +359,7 @@ function Invoice() {
                         {/* Proof of Payment */}
                         <div className="mt-6">
                             <h2 className="text-base sm:text-lg font-semibold mb-2">Proof of Payment:</h2>
-                            {CURRENT_ROLE === "user" && transaction.status === "pending" && !hasDatePassed(transaction?.expired_date) && (
+                            {currentRole === "user" && transaction.status === "pending" && !hasDatePassed(transaction?.expired_date) && (
                                 <input
                                     type="file"
                                     accept="image/*"
@@ -380,7 +382,7 @@ function Invoice() {
                         </div>
 
                         {/* Action Buttons */}
-                        {CURRENT_ROLE === "user" && (
+                        {currentRole === "user" && (
                             <div className="flex justify-center mt-10">
                                 <button onClick={() => navigate("/my-transaction")} className="btn btn-sm sm:btn-md btn-primary">Back to My Transactions</button>
                             </div>
@@ -412,7 +414,7 @@ function Invoice() {
                     </div>
                 </dialog>
             </div>
-            {CURRENT_ROLE === "user" && (
+            {currentRole === "user" && (
                 <Footer />
             )}
         </>
